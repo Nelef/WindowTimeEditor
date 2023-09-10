@@ -1,9 +1,11 @@
 from datetime import datetime, timedelta
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, scrolledtext
 from screeninfo import get_monitors
 import tkinter.messagebox as messagebox
-from tkinter import scrolledtext
+
+title_text = "금오산 장태호 전광판 v1.0"
+font_size = 16  # 초기 글자 크기 설정
 
 def on_closing():
     if messagebox.askyesno("종료 확인", "프로그램을 종료하시겠습니까?"):
@@ -25,6 +27,46 @@ def unset_fullscreen():
 def update_label():
     label.config(text=entry.get("1.0", "end-1c"))
     
+def increase_font_size():
+    global font_size
+    font_size += 1
+    label_time.config(font=("Helvetica", font_size))
+    label_next_time.config(font=("Helvetica", font_size))
+    label_next_next_time.config(font=("Helvetica", font_size))
+    label.config(font=("Helvetica", font_size))
+    font_size_entry.delete(0, tk.END)
+    font_size_entry.insert(0, font_size)
+
+def decrease_font_size():
+    global font_size
+    if font_size > 8:
+        font_size -= 1
+        label_time.config(font=("Helvetica", font_size))
+        label_next_time.config(font=("Helvetica", font_size))
+        label_next_next_time.config(font=("Helvetica", font_size))
+        label.config(font=("Helvetica", font_size))
+        font_size_entry.delete(0, tk.END)
+        font_size_entry.insert(0, font_size)
+            
+        
+# 글자 크기 업데이트 함수
+def update_font_size():
+    global font_size
+    new_font_size_str = font_size_entry.get()
+    
+    try:
+        new_font_size = int(new_font_size_str)
+        if 8 <= new_font_size <= 300:
+            font_size = new_font_size
+            label_time.config(font=("Helvetica", font_size))
+            label_next_time.config(font=("Helvetica", font_size))
+            label_next_next_time.config(font=("Helvetica", font_size))
+            label.config(font=("Helvetica", font_size))
+        else:
+            messagebox.showerror("오류", "글자 크기는 8에서 300 사이의 값을 입력하세요.")
+    except ValueError:
+        messagebox.showerror("오류", "올바른 숫자를 입력하세요.")
+
 ##
 ## 열차 시각 계산
 ##
@@ -70,7 +112,7 @@ def update_time():
 
 # Window 1
 window1 = tk.Tk()
-window1.title("window 1th")
+window1.title(title_text)
 window1.geometry("800x600")
 window1.protocol("WM_DELETE_WINDOW", on_closing)
 window1.configure(bg="black")
@@ -80,10 +122,10 @@ frame = tk.Frame(window1, bg="black")
 frame.place(relx=0.5, rely=0.5, anchor="center")  # 프레임을 윈도우의 중앙에 배치
 
 # 라벨 위젯 생성 및 배치
-label_time = tk.Label(frame, text="현재시간       ", fg="light blue", bg="black", font=("Helvetica", 16))
-label_next_time = tk.Label(frame, text="출발시간       ", fg="light green", bg="black", font=("Helvetica", 16))
-label_next_next_time = tk.Label(frame, text="다음출발       ", fg="yellow", bg="black", font=("Helvetica", 16))
-label = tk.Label(frame, text="안전을 위하여 차례차례", fg="red", bg="black", font=("Helvetica", 16))
+label_time = tk.Label(frame, text="현재시간       ", fg="light blue", bg="black", font=("Helvetica", font_size))
+label_next_time = tk.Label(frame, text="출발시간       ", fg="light green", bg="black", font=("Helvetica", font_size))
+label_next_next_time = tk.Label(frame, text="다음출발       ", fg="yellow", bg="black", font=("Helvetica", font_size))
+label = tk.Label(frame, text="안전을 위하여 차례차례", fg="red", bg="black", font=("Helvetica", font_size))
 
 label_time.pack(pady=0)
 label_next_time.pack(pady=0)
@@ -94,27 +136,63 @@ update_time()
 
 # Window 2
 window2 = tk.Tk()
-window2.title("window 2th")
+window2.title(title_text)
 window2.geometry("800x600")
 window2.protocol("WM_DELETE_WINDOW", on_closing)
 
-# 스크롤 가능한 Text 위젯으로 변경하고 기본 텍스트를 설정합니다.
-entry = scrolledtext.ScrolledText(window2, wrap=tk.WORD, height=3, width=40, font=("Helvetica", 16))
-entry.insert("1.0", "안전을 위하여 차례차례")  # 기본 텍스트 설정
-entry.pack(pady=20)
+# Window 2 UI
+# frame_font_size 프레임
+frame_font_size = tk.Frame(window2)
+frame_font_size.pack(side=tk.TOP, padx=10, pady=10, fill=tk.X)
 
-btn_update = tk.Button(window2, text="확인", command=update_label, font=("Helvetica", 16))
-btn_update.pack(pady=10)
+font_size_label = tk.Label(frame_font_size, text="글자 크기:", font=("Helvetica", 16))
+font_size_label.pack(side=tk.LEFT, padx=10)
+
+font_size_entry = tk.Entry(frame_font_size, width=10, font=("Helvetica", 16))
+font_size_entry.insert(0, "16")
+font_size_entry.pack(side=tk.LEFT)
+
+font_size_apply_button = tk.Button(frame_font_size, text="적용", command=update_font_size, font=("Helvetica", 16))
+font_size_apply_button.pack(side=tk.LEFT, padx=10)
+
+# frame_buttons 프레임
+frame_buttons = tk.Frame(window2)
+frame_buttons.pack(side=tk.TOP, padx=10, pady=10, fill=tk.X)
+
+btn_increase_font = tk.Button(frame_buttons, text="글자 크기 +", command=increase_font_size, font=("Helvetica", 16))
+btn_increase_font.pack(side=tk.LEFT, padx=10)
+
+btn_decrease_font = tk.Button(frame_buttons, text="글자 크기 -", command=decrease_font_size, font=("Helvetica", 16))
+btn_decrease_font.pack(side=tk.LEFT, padx=10)
+
+# frame_text_update 프레임
+frame_text_update = tk.Frame(window2)
+frame_text_update.pack(side=tk.TOP, padx=10, pady=10, fill=tk.X)
+
+entry = scrolledtext.ScrolledText(frame_text_update, wrap=tk.NONE, height=1, width=800, font=("Helvetica", 16))
+entry.insert("1.0", "안전을 위하여 차례차례")
+entry.pack(pady=0)
+
+horizontal_scrollbar = ttk.Scrollbar(frame_text_update, orient=tk.HORIZONTAL, command=entry.xview)
+horizontal_scrollbar.pack(fill=tk.X, padx=20, pady=(0, 20))
+entry.config(xscrollcommand=horizontal_scrollbar.set)
+
+btn_update = tk.Button(frame_text_update, text="확인", command=update_label, font=("Helvetica", 16))
+btn_update.pack(side=tk.RIGHT, padx=10)
+
+# frame_monitor 프레임
+frame_monitor = tk.Frame(window2)
+frame_monitor.pack(side=tk.TOP, padx=10, pady=10, fill=tk.X)
 
 monitors = [m.name for m in get_monitors()]
-combo = ttk.Combobox(window2, values=monitors, font=("Helvetica", 16))
-combo.pack(pady=20)
+combo = ttk.Combobox(frame_monitor, values=monitors, font=("Helvetica", 16))
+combo.pack(side=tk.LEFT, padx=10)
 
-btn_fullscreen = tk.Button(window2, text="전체화면", command=set_fullscreen, font=("Helvetica", 16))
-btn_fullscreen.pack(pady=10)
+btn_fullscreen = tk.Button(frame_monitor, text="전체화면", command=set_fullscreen, font=("Helvetica", 16))
+btn_fullscreen.pack(side=tk.LEFT, padx=10)
 
-btn_unset_fullscreen = tk.Button(window2, text="전체화면 해제", command=unset_fullscreen, font=("Helvetica", 16))
-btn_unset_fullscreen.pack(pady=10)
+btn_unset_fullscreen = tk.Button(frame_monitor, text="전체화면 해제", command=unset_fullscreen, font=("Helvetica", 16))
+btn_unset_fullscreen.pack(side=tk.LEFT, padx=10)
 
 window1.mainloop()
 window2.mainloop()
