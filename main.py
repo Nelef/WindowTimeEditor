@@ -60,9 +60,9 @@ def update_time():
     
     # 라벨 업데이트
     # label_time.config(text=f"현재시간: {hour:02}:{minute:02}:{second:02}")
-    label_time.config(text=f"현재시간: {hour:02}:{minute:02}")
-    label_next_time.config(text=f"출발시간: {(hour if next_time != 0 else hour+1):02}:{next_time:02}")
-    label_next_next_time.config(text=f"다음출발: {(hour_plus_15 if next_time_plus_15 != 0 else hour_plus_15+1):02}:{next_time_plus_15:02}")
+    label_time.config(text=f"현재시간       {hour:02}:{minute:02}")
+    label_next_time.config(text=f"출발시간       {(hour if next_time != 0 else hour+1):02}:{next_time:02}")
+    label_next_next_time.config(text=f"다음출발       {(hour_plus_15 if next_time_plus_15 != 0 else hour_plus_15+1):02}:{next_time_plus_15:02}")
     window1.after(1000, update_time)
 
 
@@ -75,19 +75,22 @@ window1.geometry("800x600")
 window1.protocol("WM_DELETE_WINDOW", on_closing)
 window1.configure(bg="black")
 
-label_time = tk.Label(window1, text="현재시간: ", fg="light blue", bg="black", font=("Helvetica", 16))
+# 프레임 생성
+frame = tk.Frame(window1, bg="black")
+frame.place(relx=0.5, rely=0.5, anchor="center")  # 프레임을 윈도우의 중앙에 배치
+
+# 라벨 위젯 생성 및 배치
+label_time = tk.Label(frame, text="현재시간       ", fg="light blue", bg="black", font=("Helvetica", 16))
+label_next_time = tk.Label(frame, text="출발시간       ", fg="light green", bg="black", font=("Helvetica", 16))
+label_next_next_time = tk.Label(frame, text="다음출발       ", fg="yellow", bg="black", font=("Helvetica", 16))
+label = tk.Label(frame, text="안전을 위하여 차례차례", fg="red", bg="black", font=("Helvetica", 16))
+
 label_time.pack(pady=0)
-
-label_next_time = tk.Label(window1, text="출발시간: ", fg="light green", bg="black", font=("Helvetica", 16))
 label_next_time.pack(pady=0)
-
-label_next_next_time = tk.Label(window1, text="다음출발: ", fg="yellow", bg="black", font=("Helvetica", 16))
 label_next_next_time.pack(pady=0)
+label.pack(pady=0)
 
 update_time()
-
-label = tk.Label(window1, text="안전을 위하여 차례차례", fg="white", bg="black", font=("Helvetica", 16))
-label.pack(pady=0)
 
 # Window 2
 window2 = tk.Tk()
