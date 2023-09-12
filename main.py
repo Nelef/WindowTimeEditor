@@ -29,25 +29,11 @@ def unset_fullscreen():
 
 def update_label():
     label.config(text=entry.get("1.0", "end-1c"))
-    
-def increase_font_size():
-    global font_size
-    font_size += 1
-    label_title_text.config(font=(font_name, font_size+2))
-    label_time_text.config(font=(font_name, font_size))
-    label_time.config(font=(font_name, font_size))
-    label_next_time_text.config(font=(font_name, font_size))
-    label_next_time.config(font=(font_name, font_size))
-    label_next_next_time_text.config(font=(font_name, font_size))
-    label_next_next_time.config(font=(font_name, font_size))
-    label.config(font=(font_name, font_size-5))
-    font_size_entry.delete(0, tk.END)
-    font_size_entry.insert(0, font_size)
 
-def decrease_font_size():
+def font_size_change(size_change_value):
     global font_size
-    if font_size > 8:
-        font_size -= 1
+    if 8 <= (font_size + size_change_value) <= 300:
+        font_size += size_change_value
         label_title_text.config(font=(font_name, font_size+2))
         label_time_text.config(font=(font_name, font_size))
         label_time.config(font=(font_name, font_size))
@@ -199,15 +185,18 @@ frame_font_size.pack(side=tk.TOP, padx=10, pady=10, fill=tk.X)
 font_size_label = tk.Label(frame_font_size, text="글자 크기:", font=(font_name, 16))
 font_size_label.pack(side=tk.LEFT, padx=10)
 
-btn_decrease_font = tk.Button(frame_font_size, text="-", width=3, command=decrease_font_size, font=(font_name, 16))
-btn_decrease_font.pack(side=tk.LEFT, padx=10)
+btn_decrease_font = tk.Button(frame_font_size, text="-5", width=3, command=lambda: font_size_change(-5), font=(font_name, 16))
+btn_decrease_font.pack(side=tk.LEFT, padx=(5, 0))
+btn_decrease_font = tk.Button(frame_font_size, text="-1", width=3, command=lambda: font_size_change(-1), font=(font_name, 16))
+btn_decrease_font.pack(side=tk.LEFT, padx=(5, 0))
+btn_increase_font = tk.Button(frame_font_size, text="+1", width=3, command=lambda: font_size_change(+1), font=(font_name, 16))
+btn_increase_font.pack(side=tk.LEFT, padx=(5, 0))
+btn_increase_font = tk.Button(frame_font_size, text="+5", width=3, command=lambda: font_size_change(+5), font=(font_name, 16))
+btn_increase_font.pack(side=tk.LEFT, padx=5)
 
 font_size_entry = tk.Entry(frame_font_size, width=10, font=(font_name, 16))
 font_size_entry.insert(0, font_size)
 font_size_entry.pack(side=tk.LEFT)
-
-btn_increase_font = tk.Button(frame_font_size, text="+", width=3, command=increase_font_size, font=(font_name, 16))
-btn_increase_font.pack(side=tk.LEFT, padx=10)
 
 font_size_apply_button = tk.Button(frame_font_size, text="적용", command=update_font_size, font=(font_name, 16))
 font_size_apply_button.pack(side=tk.LEFT, padx=10)
@@ -245,5 +234,5 @@ btn_unset_fullscreen.pack(side=tk.LEFT, padx=10)
 btn_window2_close = tk.Button(window2, text="창 숨기기", command=hide_window2, font=(font_name, 16))
 btn_window2_close.pack(side=tk.TOP, pady=0)
 
-window1.mainloop()
 window2.mainloop()
+window1.mainloop()
