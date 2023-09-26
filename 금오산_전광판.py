@@ -5,10 +5,10 @@ from screeninfo import get_monitors
 import tkinter.messagebox as messagebox
 import pygame
 
-# 빌드 방법 : pyinstaller --onefile --name 금오산_케이블카_알림판_v1.3_상행출발 금오산_전광판.py
+# 빌드 방법 : pyinstaller --onefile --name 금오산_케이블카_알림판_v1.4 금오산_전광판.py
 
-departure_info = "하행출발"
-title_text = "금오산 케이블카 알림판 v1.3 "+departure_info
+departure_info = "대기시간"
+title_text = "금오산 케이블카 알림판 v1.4"
 font_name = "Malgun Gothic"
 # font_name_bold = font.Font(family="Malgun Gothic", weight="bold")
 font_size = 30  # 초기 글자 크기 설정
@@ -142,7 +142,7 @@ def update_time():
         minute_limit_time = 60 - minute - 1
     second_limit_time = 60 - second
     
-    if minute_limit_time == 0 and second_limit_time == 1:
+    if minute_limit_time == 1 and second_limit_time == 1:
         mp3_file = "초인종소리.mp3"  # 재생할 MP3 파일 경로를 지정하세요
         play_mp3_once(mp3_file)
     
@@ -159,12 +159,12 @@ def update_time():
     window1.after(1000, update_time)
 
 def window1_toggle_bg_color():
-    current_bg = label_next_next_time.cget("bg")
+    current_bg = label_next_time.cget("bg")
     if current_bg == "black":
-        label_next_next_time.config(bg="light blue")
+        label_next_time.config(bg="red")
     else:
-        label_next_next_time.config(bg="black")
-    window1.after(2000, window1_toggle_bg_color)  # 3초마다 toggle_bg_color 함수 호출
+        label_next_time.config(bg="black")
+    window1.after(9000, window1_toggle_bg_color)  # 10초마다 toggle_bg_color 함수 호출
 
 def play_mp3_once(mp3_file):
     pygame.mixer.init()
@@ -219,7 +219,7 @@ label_next_next_time.grid(row=3, column=1, sticky="w")
 label_divide = tk.Label(grid_frame, text="------------------------------------------------------------------------------------------------------", fg="white", bg="black", font=(font_name, font_size-5))
 label_divide.grid(row=4, column=0, columnspan=2, pady=(0, 0))
 
-label = tk.Label(grid_frame, text="♥금오산 케이블카를 이용해주셔서 감사드립니다!♥\n매시 00분15분30분45분 (4회 운행)\n막차하행 : 17시 45분", fg="yellow", bg="black", font=(font_name, font_size-5))
+label = tk.Label(grid_frame, text="♥금오산 케이블카를 이용해주셔서 감사합니다!♥\n매시 00분/15분/30분/45분 (4회 운행)\n막차 : 17시 45분", fg="yellow", bg="black", font=(font_name, font_size-5))
 label.grid(row=5, column=0, columnspan=2, pady=(0, 0))
 
 update_time()
@@ -261,7 +261,7 @@ frame_text_update = tk.Frame(window2)
 frame_text_update.pack(side=tk.TOP, padx=10, pady=10, fill=tk.X)
 
 entry = scrolledtext.ScrolledText(frame_text_update, wrap=tk.NONE, height=4, width=800, font=(font_name, 16))
-entry.insert("1.0", "♥금오산 케이블카를 이용해주셔서 감사드립니다!♥\n매시 00분15분30분45분 (4회 운행)\n막차하행 : 17시 45분")
+entry.insert("1.0", "♥금오산 케이블카를 이용해주셔서 감사합니다!♥\n매시 00분/15분/30분/45분 (4회 운행)\n막차 : 17시 45분")
 entry.pack(pady=0)
 
 horizontal_scrollbar = ttk.Scrollbar(frame_text_update, orient=tk.HORIZONTAL, command=entry.xview)
