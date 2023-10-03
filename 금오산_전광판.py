@@ -5,9 +5,9 @@ from screeninfo import get_monitors
 import tkinter.messagebox as messagebox
 import pygame
 
-# 빌드 방법 : pyinstaller --onefile --name 금오산_케이블카_알림판_v1.4 금오산_전광판.py
+# 빌드 방법 : pyinstaller --onefile --name 금오산_케이블카_알림판_v1.5 금오산_전광판.py
 
-departure_info = "대기시간"
+departure_info = "출발대기"
 title_text = "금오산 케이블카 알림판 v1.4"
 font_name = "Malgun Gothic"
 # font_name_bold = font.Font(family="Malgun Gothic", weight="bold")
@@ -142,7 +142,10 @@ def update_time():
         minute_limit_time = 60 - minute - 1
     second_limit_time = 60 - second
     
-    if minute_limit_time == 1 and second_limit_time == 1:
+    # 아침 9시 소리 시작 && 저녁 7시 소리 안남
+    if ((hour == 8 and minute > 55) and (minute_limit_time == 1 and second_limit_time == 1)) or \
+        ((hour >= 9 and hour < 19) and (minute_limit_time == 1 and second_limit_time == 1)):
+        print("초인종소리.mp3 재생")
         mp3_file = "초인종소리.mp3"  # 재생할 MP3 파일 경로를 지정하세요
         play_mp3_once(mp3_file)
     
