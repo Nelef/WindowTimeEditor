@@ -8,7 +8,7 @@ import pygame
 # 빌드 방법 : pyinstaller --onefile --name 금오산_케이블카_알림판_v1.5 금오산_전광판.py
 
 departure_info = "출발대기"
-title_text = "금오산 케이블카 알림판 v1.4"
+title_text = "금오산 케이블카 알림판 v1.5"
 font_name = "Malgun Gothic"
 # font_name_bold = font.Font(family="Malgun Gothic", weight="bold")
 font_size = 30  # 초기 글자 크기 설정
