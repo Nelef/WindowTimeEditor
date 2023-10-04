@@ -153,12 +153,40 @@ def update_time():
     # minute_plus_15 = time_plus_15.minute
     # second_plus_15 = time_plus_15.second
     # next_time_plus_15 = next_train_time(minute_plus_15)
+
+
     
     # 라벨 업데이트
     # label_time.config(text=f"현재시간: {hour:02}:{minute:02}:{second:02}")
-    label_time.config(text=f"{hour:02}시 {minute:02}분")
-    label_next_time.config(text=f"{(hour if next_time != 0 else hour+1):02}시 {next_time:02}분")
-    label_next_next_time.config(text=f"{minute_limit_time:02}분 {second_limit_time:02}초 전 입니다!")
+    # 오전 오후 분류..
+    if hour >= 0 and hour <= 11:
+        period = "오전"
+        if hour == 0:
+            hour_12 = 12
+        else:
+            hour_12 = hour
+    elif hour >= 12 and hour <= 23:
+        period = "오후"
+        if hour == 12:
+            hour_12 = 12
+        else:
+            hour_12 = hour - 12
+    else:
+        period = "유효하지 않은 시간"
+
+    next_hour = hour if next_time != 0 else hour+1
+    
+    if next_hour >= 12:
+        next_period = "오후"
+    else:
+        next_period = "오전"
+        
+    if next_hour >= 13:
+        next_hour -= 12
+
+    label_time.config(text=f"{period} {hour_12:02}시 {minute:02}분")
+    label_next_time.config(text=f"{next_period} {next_hour:02}시 {next_time:02}분")
+    label_next_next_time.config(text=f"{minute_limit_time:02}분 {second_limit_time:02}초 전")
     window1.after(1000, update_time)
 
 def window1_toggle_bg_color():
@@ -196,7 +224,7 @@ grid_frame.place(relx=0.5, rely=0.5, anchor="center")  # 프레임을 윈도우�
 label_group_frame = tk.Frame(grid_frame, bg="black")
 label_group_frame.grid(row=0, column=0, columnspan=2, pady=(0, 20))
 
-label_title_text = tk.Label(label_group_frame, text="         출 발 시 간", fg="light green", bg="black", font=(font_name, int(font_size*1.2)))
+label_title_text = tk.Label(label_group_frame, text="출 발 시 간", fg="light green", bg="black", font=(font_name, int(font_size*1.2)))
 label_title_text.grid(row=0, column=0)
 label_calendar_text = tk.Label(label_group_frame, text="(다른 글자)", fg="white", bg="black", font=(font_name, int(font_size*0.8)))
 label_calendar_text.grid(row=0, column=1)
@@ -214,10 +242,10 @@ label_next_time = tk.Label(grid_frame, text="00시 15분", fg="white", bg="black
 label_next_time.grid(row=2, column=1, sticky="w")
 
 label_next_next_time_text = tk.Label(grid_frame, text=departure_info, fg="red", bg="black", font=(font_name, font_size))
-label_next_next_time_text.grid(row=3, column=0, sticky="e", padx=(0, 40))
+label_next_next_time_text.grid(row=3, column=0, sticky="e", padx=(0, 40), pady=(15, 0))
 
-label_next_next_time = tk.Label(grid_frame, text="15분 00초 전 입니다!", fg="red", bg="black", font=(font_name, font_size))
-label_next_next_time.grid(row=3, column=1, sticky="w")
+label_next_next_time = tk.Label(grid_frame, text="15분 00초 전", fg="red", bg="black", font=(font_name, font_size))
+label_next_next_time.grid(row=3, column=1, sticky="w", pady=(15, 0))
 
 label_divide = tk.Label(grid_frame, text="------------------------------------------------------------------------------------------------------", fg="white", bg="black", font=(font_name, font_size-5))
 label_divide.grid(row=4, column=0, columnspan=2, pady=(0, 0))
